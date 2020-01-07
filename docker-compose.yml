@@ -1,0 +1,30 @@
+version: '3'
+services:
+    rabbitmq:
+        image: rabbitmq
+    mongo:
+        image: mongo
+    redis:
+        image: redis
+    app:
+        build: .
+        ports: 
+            - "2112:2112"
+        environment:
+            PORT: 2112
+            NODE_ENV: development
+            GATEMAN_KEY: 4844e2650b69fd92f0af204275ca74b9
+            MONGODB_URL: mongodb://mongo:27017/tharwa
+            REDIS_URL: redis://redis:6379
+            AMQP_URL: amqp://rabbitmq:5672
+        depends_on:
+            - rabbitmq
+            - mongo
+            - redis
+        restart: always
+        command:
+            [ 
+                '/bin/sh',
+                '-c',
+                'chmod +x ./wait-for-it.sh && ./wait-for-it.sh rabbitmq:5672 -- yarn start'
+            ]

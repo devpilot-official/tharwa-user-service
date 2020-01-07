@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tharwa-user-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tharwa-user-service
+  template:
+    metadata:
+      labels:
+        app: tharwa-user-service
+    spec:
+      containers:
+        - name: app
+          image: devpilot001/knote-test:1.0.0
+          ports:
+            - containerPort: 2112
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tharwa-user-service
+spec:
+  selector:
+    app: tharwa-user-service
+  ports:
+    - port: 80
+      targetPort: 2112
+  type: LoadBalancer
